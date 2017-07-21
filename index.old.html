@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Home</title>
+  </head>
+  <body>
+    <table>
+      <tbody>
+        <tr>
+          <td>Serial:</td>
+          <td><input type="text" id="serial" /></td>
+        </tr>
+
+        <tr>
+          <td>Idade:</td>
+          <td><input type="text" id="age"></td>
+        </tr>
+
+        <tr>
+          <td>Só letras:</td>
+          <td><input type="text" id="only_letters"></td>
+        </tr>
+
+        <tr>
+          <td colspan="2"><input type="button" id="submit" value="Butão"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <span id="span"></span>
+
+    <script>
+      var Validate = function (fields) {
+        this._fields = fields
+        this._valid = true
+
+        return this
+      }
+
+      Validate.prototype.validate = function (pattern, field) {
+        if (! pattern.test(this._fields[field])) {
+          this._valid = false
+        }
+      }
+
+      Validate.prototype.onlyNumbers = function (field) {
+        var pattern = /^[0-9]*$/
+
+        this.validate(pattern, field)
+
+        return this
+      }
+
+      Validate.prototype.onlyLetters = function (field) {
+        var pattern = /^[a-zA-Z]*$/
+
+        this.validate(pattern, field)
+
+        return this
+      }
+
+      Validate.prototype.noSpecialCharacters = function (field) {
+        var pattern = /^[0-9a-zA-Z]*$/
+
+        this.validate(pattern, field)
+
+        return this
+      }
+
+      Validate.prototype.isValid = function () {
+        return this._valid
+      }
+
+      document.querySelector('#submit').addEventListener('click', function (event) {
+        event.preventDefault()
+
+        var validate = new Validate({
+          age: document.querySelector("#age").value,
+          name: document.querySelector("#only_letters").value,
+          serial: document.querySelector("#serial").value
+        })
+
+        validate.onlyNumbers('age')
+                .onlyLetters('name')
+                .noSpecialCharacters('serial')
+
+        if (validate.isValid()) {
+          document.querySelector("#span").innerHTML = "Ma oeee"
+        } else {
+          document.querySelector("#span").innerHTML = ""
+          alert('Faiô')
+        }
+      })
+
+      // A ideia é ficar assim futuramente!!!
+
+      // var validate = new Validate({
+      //   age: {
+      //     gte: 18,
+      //     lte: 25,
+      //     type: 'integer'
+      //   },
+      //   preco: {
+      //     type: 'money'
+      //   },
+      //   name: {
+      //     min: 5,
+      //     max: 25,
+      //     type: 'personName'
+      //   },
+      //   serial: {
+      //     exact: 20,
+      //     type: 'noSpecialCharacters'
+      //   },
+      //   crazy_field: {
+      //     regex: /^[tuamae]*$/
+      //   },
+      //   custom_value: {
+      //     value: "Esse valor veio de outro lugar sem ser um campinho fofo no formulário"
+      //   }
+      // })
+    </script>
+  </body>
+</html>

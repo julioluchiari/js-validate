@@ -4,21 +4,30 @@
     <title>Home</title>
   </head>
   <body>
+    <ul id="validation_messages">
+
+    </ul>
+
     <table>
       <tbody>
         <tr>
           <td>Serial:</td>
-          <td><input type="text" id="serial" /></td>
+          <td><input type="text" id="serial" data-validate="serial"/></td>
         </tr>
 
         <tr>
           <td>Idade:</td>
-          <td><input type="text" id="age"></td>
+          <td><input type="text" id="age" data-validate="age"></td>
         </tr>
 
         <tr>
-          <td>Só letras:</td>
-          <td><input type="text" id="only_letters"></td>
+          <td>Nome:</td>
+          <td><input type="text" id="name" data-validate="name"></td>
+        </tr>
+
+        <tr>
+          <td>Preço:</td>
+          <td><input type="text" id="preco" data-validate="preco"></td>
         </tr>
 
         <tr>
@@ -27,98 +36,55 @@
       </tbody>
     </table>
 
-    <span id="span"></span>
+    <script src="validate.js"></script>
 
     <script>
-      var Validate = function (fields) {
-        this._fields = fields
-        this._valid = true
-
-        return this
-      }
-
-      Validate.prototype.validate = function (pattern, field) {
-        if (! pattern.test(this._fields[field])) {
-          this._valid = false
-        }
-      }
-
-      Validate.prototype.onlyNumbers = function (field) {
-        var pattern = /^[0-9]*$/
-
-        this.validate(pattern, field)
-
-        return this
-      }
-
-      Validate.prototype.onlyLetters = function (field) {
-        var pattern = /^[a-zA-Z]*$/
-
-        this.validate(pattern, field)
-
-        return this
-      }
-
-      Validate.prototype.noSpecialCharacters = function (field) {
-        var pattern = /^[0-9a-zA-Z]*$/
-
-        this.validate(pattern, field)
-
-        return this
-      }
-
-      Validate.prototype.isValid = function () {
-        return this._valid
-      }
-
       document.querySelector('#submit').addEventListener('click', function (event) {
-        event.preventDefault()
+        event.preventDefault();
 
         var validate = new Validate({
-          age: document.querySelector("#age").value,
-          name: document.querySelector("#only_letters").value,
-          serial: document.querySelector("#serial").value
-        })
-
-        validate.onlyNumbers('age')
-                .onlyLetters('name')
-                .noSpecialCharacters('serial')
+          age: {
+            gte: 18,
+            lte: 25,
+            type: 'integer',
+            presence: true
+          },
+          preco: {
+            type: 'money',
+            gte: 50,
+            presence: true
+          },
+          name: {
+            min: 5,
+            max: 25,
+            type: 'personName',
+            presence: true
+          },
+          serial: {
+            exact: 20,
+            type: 'noSpecialCharacters',
+            presence: true
+          },
+          crazy_field: {
+            regex: /^[a-z\s]*$/,
+            value: 'nao pode letras gramdes'
+          },
+          custom_value: {
+            value: "Esse valor veio de outro lugar sem ser um campinho fofo no formulário",
+            presence: true
+          }
+        });
 
         if (validate.isValid()) {
-          document.querySelector("#span").innerHTML = "Ma oeee"
+          console.log('Deu certo!!!');
         } else {
-          document.querySelector("#span").innerHTML = ""
-          alert('Faiô')
+          var messages = validate.getMessages().map(function (message) {
+            return "<li>"+message+"</li>";
+          });
+
+          document.querySelector("#validation_messages").innerHTML = messages.join('');
         }
-      })
-
-      // A ideia é ficar assim futuramente!!!
-
-      // var validate = new Validate({
-      //   age: {
-      //     gte: 18,
-      //     lte: 25,
-      //     type: 'integer'
-      //   },
-      //   preco: {
-      //     type: 'money'
-      //   },
-      //   name: {
-      //     min: 5,
-      //     max: 25,
-      //     type: 'personName'
-      //   },
-      //   serial: {
-      //     exact: 20,
-      //     type: 'noSpecialCharacters'
-      //   },
-      //   crazy_field: {
-      //     regex: /^[tuamae]*$/
-      //   },
-      //   custom_value: {
-      //     value: "Esse valor veio de outro lugar sem ser um campinho fofo no formulário"
-      //   }
-      // })
+      });
     </script>
   </body>
 </html>
