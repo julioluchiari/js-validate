@@ -520,3 +520,5 @@ Validate.prototype.isValid = function () {
 Validate.prototype.getMessages = function () {
   return this._messages;
 }
+
+module.exports = Validate;
