@@ -41,7 +41,7 @@ Validate.prototype._validate = function () {
     var rules = this._fields[key];
 
     if (! rules.value) {
-      rules.value = document.querySelector("input[data-validate="+key+"]");
+      rules.value = document.querySelector("input[data-validate="+key+"]").value;
     }
 
     var field_name = key;
@@ -129,7 +129,7 @@ Validate.prototype.money = function (_field_name, _rules) {
 }
 
 Validate.prototype.onlyLetters = function (_field_name, _rules) {
-  var pattern = /^[0-9]*$/i;
+  var pattern = /^[a-zA-Z]*$/;
 
   if (! pattern.test(_rules.value)) {
     this._addMessage("The field '"+_field_name+"' must have only letters.");
@@ -141,7 +141,7 @@ Validate.prototype.onlyLetters = function (_field_name, _rules) {
 }
 
 Validate.prototype.noSpecialCharacters = function (_field_name, _rules) {
-  var pattern = /^[0-9a-zA-Z]*$/i;
+  var pattern = /^[0-9a-zA-Z]*$/;
 
   if (! pattern.test(_rules.value)) {
     this._addMessage("The field '"+_field_name+"' must have only letters and numbers.");
