@@ -1,0 +1,35 @@
+{
+  "name": "@julioluchiari/js-validate",
+  "version": "0.1.0",
+  "description": "A simple and lightweight validation library for javascript, built with vanilla js",
+  "main": "dist/validate.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "build": "gulp",
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/julioluchiari/js-validate.git"
+  },
+  "keywords": [
+    "js",
+    "validate",
+    "form"
+  ],
+  "author": "Júlio Luchiari",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/julioluchiari/js-validate/issues"
+  },
+  "homepage": "https://github.com/julioluchiari/js-validate#readme",
+  "devDependencies": {
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-minify": "^1.0.0",
+    "gulp-mocha": "^4.3.1",
+    "mocha": "^3.4.2"
+  }
+}
