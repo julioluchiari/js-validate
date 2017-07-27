@@ -13,6 +13,9 @@ var Validate = function (_fields) {
   // flag to validation status
   this._valid = true;
 
+  // validation status array
+  this._validArr = []
+
   // store all validation error messages
   this._messages = [];
 
@@ -37,8 +40,8 @@ Validate.prototype._addMessage = function (_message) {
  * @return {void}
  */
 Validate.prototype._handle = function (_field_name, _rules) {
-  if (typeof this[_rules.type] == 'function') {
-    this[_rules.type](_field_name, _rules);
+  if (typeof this[_rules.type] === 'function') {
+    this._validArr.push(this[_rules.type](_field_name, _rules));
   } else {
     console.log("The function '"+_rules.type+"' does not exists.");
   }
@@ -97,6 +100,12 @@ Validate.prototype._validate = function () {
     // run validation for that field
     this._doValidate(key, rules);
   }
+
+  if (this._validArr.indexOf(false) !== -1) {
+    this._valid = false
+  } else {
+    this._messages = []
+  }
 }
 
 /**
@@ -110,31 +119,35 @@ Validate.prototype._validate = function () {
 Validate.prototype._validateNumberLength = function (_field_name, _value, _rules) {
   var validation_status = true;
 
+  console.log(_field_name, _value, _rules.gte, _value < _rules.gte, 'gte')
+  console.log(_field_name, _value, _rules.lte, _value > _rules.lte, 'lte')
+
   // greater than
-  if (_rules.gt && _rules.gt > _value) {
+  if (_rules.gt && _value <= _rules.gt) {
     this._addMessage("The field '"+_field_name+"' must be greater than "+_rules.gt+".");
     validation_status = false;
   }
 
   // greater than or equal to
-  if (_rules.gte && _rules.gte >= _value) {
+  if (_rules.gte && _value < _rules.gte) {
     this._addMessage("The field '"+_field_name+"' must be greater than or equal to "+_rules.gte+".");
     validation_status = false;
   }
 
   // less than
-  if (_rules.lt && _rules.lt < _value) {
+  if (_rules.lt && _value >= _rules.lt) {
     this._addMessage("The field '"+_field_name+"' must be less than "+_rules.lt+".");
     validation_status = false;
   }
 
 
   // less than or equal to
-  if (_rules.lte && _rules.lte <= _value) {
+  if (_rules.lte && _value > _rules.lte) {
     this._addMessage("The field '"+_field_name+"' must be less than or equal to "+_rules.lte+".");
     validation_status = false;
   }
 
+  console.log(validation_status)
   return validation_status;
 }
 
@@ -146,8 +159,8 @@ Validate.prototype._validateNumberLength = function (_field_name, _value, _rules
  * @return {boolean}             if the field is valid or not
  */
 Validate.prototype._validateStringLength = function (_field_name, _rules) {
-  var value = _rules.value.length
-  var validation_status = true
+  var value = _rules.value.length;
+  var validation_status = true;
 
   // at least
   if (_rules.min && value < _rules.min) {
