@@ -147,7 +147,6 @@ Validate.prototype._validateNumberLength = function (_field_name, _value, _rules
     validation_status = false;
   }
 
-  console.log(validation_status)
   return validation_status;
 }
 
@@ -175,7 +174,7 @@ Validate.prototype._validateStringLength = function (_field_name, _rules) {
   }
 
   // equal to
-  if (_rules.exact && value == _rules.exact) {
+  if (_rules.exact && value != _rules.exact) {
     this._addMessage("The field '"+_field_name+"' must have "+_rules.exact+" characters.");
     validation_status = false;
   }
