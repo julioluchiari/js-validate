@@ -75,15 +75,18 @@
           }
         });
 
-        if (validate.isValid()) {
-          console.log('Deu certo!!!');
-        } else {
-          var messages = validate.getMessages().map(function (message) {
-            return "<li>"+message+"</li>";
-          });
 
-          document.querySelector("#validation_messages").innerHTML = messages.join('');
+        if (validate.isValid()) {
+          console.log("It's alright!");
+          validate._addMessage("It's alright!");
         }
+
+        var messages = validate.getMessages().map(function (message) {
+          return "<li>"+message+"</li>";
+        });
+
+        document.querySelector("#validation_messages").innerHTML = messages.join('');
+
       });
     </script>
   </body>
